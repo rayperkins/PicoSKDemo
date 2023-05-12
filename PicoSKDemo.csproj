@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net6.0-android;</TargetFrameworks>
+		<OutputType>Exe</OutputType>
+		<UseMaui>true</UseMaui>
+		<SingleProject>true</SingleProject>
+
+		<!-- Display name -->
+		<ApplicationTitle>PicoSKDemo</ApplicationTitle>
+		
+		<!-- App Identifier -->
+		<ApplicationId>com.perkins.picoSKDemo</ApplicationId>
+		<ApplicationIdGuid>58C86700-676A-4423-B6A8-7B945BD63850</ApplicationIdGuid>
+
+		<!-- Versions -->
+		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+		<ApplicationVersion>1</ApplicationVersion>
+
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">31.0</SupportedOSPlatformVersion>
+
+		<SKOpenXRLoader>Pico</SKOpenXRLoader>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<!-- App Icon -->
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#000000" />
+
+		<!-- Images -->
+		<MauiImage Include="Resources\Images\*" /> 
+
+	</ItemGroup>
+
+	<ItemGroup>
+		<Reference Include="$(SolutionDir)..\StereoKit\bin\netstandard2.0\StereoKit.dll" />
+
+		<AndroidNativeLibrary Include="$(SolutionDir)..\StereoKit\bin\distribute\bin\Android\arm64-v8a\Debug\libStereoKitC.so">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<Abi>arm64-v8a</Abi>
+		</AndroidNativeLibrary>
+		<AndroidNativeLibrary Include="$(ProjectDir)\Platforms\Android\lib\libopenxr_loader.so">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<Abi>arm64-v8a</Abi>
+		</AndroidNativeLibrary>
+	</ItemGroup>
+
+</Project>
