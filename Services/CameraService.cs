@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PicoSKDemo.Platforms.Android.Services
+namespace PicoSKDemo.Services
 {
     public class CameraService : ICameraService
     {

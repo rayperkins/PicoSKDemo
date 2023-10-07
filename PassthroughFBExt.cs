@@ -1,6 +1,4 @@
-﻿using Microsoft.Maui.Controls;
-using Microsoft.Maui.Media;
-using StereoKit;
+﻿using StereoKit;
 using StereoKit.Framework;
 using System;
 using System.Collections.Generic;

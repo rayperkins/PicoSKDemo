@@ -1,22 +1,21 @@
 ﻿using Android.Icu.Number;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using PicoSKDemo.Platforms.Android.Services;
 using PicoSKDemo.Services.Abstractions;
 using StereoKit;
 using System;
 
 namespace PicoSKDemo;
 
-public class App
+public class SKApp
 {
     ILogger _logger;
     IServiceProvider _serviceProvider;
     ICameraService _cameraService;
 
     public SKSettings Settings => new SKSettings {
-		appName           = "SKTemplate_Maui",
-		assetsFolder      = "Assets",
+		appName           = "PicoSKDemo",
+		assetsFolder      = "assets",
 		displayPreference = DisplayMode.MixedReality
 	};
 
@@ -30,8 +29,8 @@ public class App
 
 
 
-    public App(
-		ILogger<App> logger,
+    public SKApp(
+		ILogger<SKApp> logger,
 		IServiceProvider serviceProvider,
         ICameraService cameraService)
 	{
@@ -47,8 +46,8 @@ public class App
 		cube = Model.FromMesh(
 			Mesh.GenerateRoundedCube(Vec3.One * 0.1f, 0.02f),
 			Default.MaterialUI);
-        trainModel = Model.FromFile("Assets/pallet_conveyor_model_3.glb");
-        floorMaterial = new Material(Shader.FromFile("Assets/floor.hlsl"));
+        trainModel = Model.FromFile("pallet_conveyor_model_3.glb");
+        floorMaterial = new Material(Shader.FromFile("floor.hlsl"));
         floorMaterial.Transparency = Transparency.Blend;
         floorSolid = new Solid(World.HasBounds ? World.BoundsPose.position : new Vec3(0, -1.5f, 0), Quat.Identity, SolidType.Immovable);
 
@@ -67,13 +66,13 @@ public class App
 
 	public void Step()
 	{
-		//if (SK.System.displayType == Display.Opaque)
-		//	Default.MeshCube.Draw(floorMaterial, floorTransform);
+		if (SK.System.displayType == Display.Opaque)
+			Default.MeshCube.Draw(floorMaterial, floorTransform);
 
 		UI.Handle("Cube", ref cubePose, cube.Bounds);
         cube.Draw(cubePose.ToMatrix());
 
-        //trainModel.Draw(Matrix.TRS(new Vec3(-37.0f, -2.0f, 6.0f), Quat.FromAngles(0, 0, 0), 1.0f));
+        trainModel.Draw(Matrix.TRS(new Vec3(-37.0f, -2.0f, 6.0f), Quat.FromAngles(0, 0, 0), 1.0f));
 
         if (World.HasBounds)
         {
