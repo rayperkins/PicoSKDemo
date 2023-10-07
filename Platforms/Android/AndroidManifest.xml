@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-	<uses-sdk android:minSdkVersion="29" android:targetSdkVersion="29" />
+	<uses-sdk android:minSdkVersion="29" android:targetSdkVersion="33" />
 
 	<application android:allowBackup="true" android:icon="@mipmap/appicon" android:roundIcon="@mipmap/appicon_round" android:supportsRtl="true">
 		<!-- Oculus -->
@@ -15,7 +15,8 @@
 	<uses-permission android:name="android.permission.RECORD_AUDIO" />
 	<uses-permission android:name="android.permission.CAPTURE_AUDIO_OUTPUT" />
 	<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-
+	<uses-permission android:name="android.permission.CAMERA" />
+	
 	<!-- Generic OpenXR items -->
 	<uses-feature    android:name="android.hardware.vr.headtracking" android:required="false" android:version="1" />
 	<uses-permission android:name="org.khronos.openxr.permission.OPENXR_SYSTEM"/>

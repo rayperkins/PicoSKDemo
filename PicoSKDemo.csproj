@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net6.0-android;</TargetFrameworks>
+		<TargetFrameworks>;net6.0-android33.0</TargetFrameworks>
 		<OutputType>Exe</OutputType>
 		<UseMaui>true</UseMaui>
 		<SingleProject>true</SingleProject>
@@ -17,9 +17,11 @@
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
 		<ApplicationVersion>1</ApplicationVersion>
 
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">31.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">29.0</SupportedOSPlatformVersion>
 
 		<SKOpenXRLoader>Pico</SKOpenXRLoader>
+
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -32,16 +34,41 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Reference Include="$(SolutionDir)..\StereoKit\bin\netstandard2.0\StereoKit.dll" />
+	  <None Remove="Assets\DamagedHelmet.gltf" />
+	  <None Remove="Assets\floor.hlsl" />
+	  <None Remove="Assets\pallet_conveyor_model_3.glb" />
+	  <None Remove="Assets\train.glb" />
+	  <None Remove="openxr_loader\libopenxr_loader.so" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="7.0.0" />
+		<PackageReference Include="StereoKit" Version="0.3.7-preview.1575" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<!--<Reference Include="$(SolutionDir)..\StereoKit\bin\netstandard2.0\StereoKit.dll" />
 
 		<AndroidNativeLibrary Include="$(SolutionDir)..\StereoKit\bin\distribute\bin\Android\arm64-v8a\Debug\libStereoKitC.so">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 			<Abi>arm64-v8a</Abi>
-		</AndroidNativeLibrary>
-		<AndroidNativeLibrary Include="$(ProjectDir)\Platforms\Android\lib\libopenxr_loader.so">
+		</AndroidNativeLibrary>-->
+		<!--<AndroidNativeLibrary Include="$(ProjectDir)\Platforms\Android\lib\libopenxr_loader.so">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 			<Abi>arm64-v8a</Abi>
 		</AndroidNativeLibrary>
+		<AndroidNativeLibrary Include="openxr_loader\pico\libopenxr_loader.so">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		  <Abi>arm64-v8a</Abi>
+		</AndroidNativeLibrary>-->
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiAsset Include="Assets\DamagedHelmet.gltf" />
+	  <MauiAsset Include="Assets\floor.hlsl" />
+	  <MauiAsset Include="Assets\pallet_conveyor_model_3.glb" />
+	  <MauiAsset Include="Assets\train.glb" />
 	</ItemGroup>
 
 </Project>

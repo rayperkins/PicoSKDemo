@@ -1,11 +1,16 @@
 ﻿using Android.App;
 using Android.Content;
 using Android.Graphics;
+using Android.Hardware.Camera2;
 using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using AndroidX.AppCompat.App;
 using Java.Lang;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using PicoSKDemo.Platforms.Android.Services;
+using PicoSKDemo.Services.Abstractions;
 using StereoKit;
 using System;
 using System.Threading.Tasks;
@@ -16,8 +21,11 @@ namespace PicoSKDemo;
 [IntentFilter(new[] { Intent.ActionMain }, Categories = new[] { "org.khronos.openxr.intent.category.IMMERSIVE_HMD", "com.oculus.intent.category.VR", Intent.CategoryLauncher })]
 public class MainActivity : AppCompatActivity, ISurfaceHolderCallback2
 {
-	App                app;
+    public static readonly int REQUEST_CAMERA_PERMISSION = 1;
+    App                app;
 	Android.Views.View surface;
+	IServiceProvider _serviceProvider;
+
 
 	protected override void OnCreate(Bundle savedInstanceState)
 	{
@@ -33,14 +41,38 @@ public class MainActivity : AppCompatActivity, ISurfaceHolderCallback2
 
 		base.OnCreate(savedInstanceState);
 		Microsoft.Maui.ApplicationModel.Platform.Init(this, savedInstanceState);
+        ServiceCollection services = new ServiceCollection();
+		AddServices(services);
 
-		Run(Handle);
-	}
+        _serviceProvider = services.BuildServiceProvider();
+
+        RequestPermissions(new string[] { Android.Manifest.Permission.Camera }, REQUEST_CAMERA_PERMISSION);
+
+        var cameraManager = (CameraManager)this.GetSystemService(Context.CameraService);
+
+        var cameraList = cameraManager.GetCameraIdList();
+        //var concurrentCameraIds = cameraManager.ConcurrentCameraIds;
+        Run(Handle);
+    }
+
 	public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
 	{
 		Microsoft.Maui.ApplicationModel.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
-		base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+        
+        base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
 	}
+
+	void AddServices(IServiceCollection services)
+	{
+		services.AddSingleton<Context>(this.ApplicationContext);
+		services.AddSingleton<ICameraService, CameraService>();
+		services.AddLogging((builder) =>
+		{
+			builder.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Debug);
+
+            builder.AddConsole();
+		});
+    }
 
 	static bool running = false;
 	void Run(IntPtr activityHandle)
@@ -53,10 +85,7 @@ public class MainActivity : AppCompatActivity, ISurfaceHolderCallback2
 			// If the app has a constructor that takes a string array, then
 			// we'll use that, and pass the command line arguments into it on
 			// creation
-			Type appType = typeof(App);
-			app = appType.GetConstructor(new Type[] { typeof(string[]) }) != null
-				? (App)Activator.CreateInstance(appType, new object[] { new string[0] { } })
-				: (App)Activator.CreateInstance(appType);
+			var app = ActivatorUtilities.CreateInstance<App>(_serviceProvider);
 			if (app == null)
 				throw new System.Exception("StereoKit loader couldn't construct an instance of the App!");
 
